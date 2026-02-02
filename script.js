@@ -1,7 +1,7 @@
 let currentJSON = null;
 let currentViewMode = 'formatted';
 let jsonData = null;
-let currentTheme = localStorage.getItem('theme') || 'light';
+let currentTheme = localStorage.getItem('theme') || 'dark';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
