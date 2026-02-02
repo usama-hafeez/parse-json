@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JSON Viewer & Formatter | Online JSON Validator & Beautifier</title>
+    <meta name="description" content="Fast, free JSON Viewer and Formatter for developers. Paste, load, validate, beautify, and inspect large JSON responses from APIs with tree view, syntax highlighting, and search.">
+    <meta name="keywords" content="JSON viewer, JSON formatter, JSON validator, JSON beautifier, JSON editor, JSON tree viewer, online JSON tool, pretty print JSON, minify JSON, JSON inspector">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph for rich previews -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="JSON Viewer & Formatter | Online JSON Validator & Beautifier">
+    <meta property="og:description" content="View, format, validate, and inspect JSON data in your browser. Supports large JSON, tree view, syntax highlighting, and dark mode.">
+    <meta property="og:image" content="favicon.svg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JSON Viewer & Formatter | Online JSON Validator & Beautifier">
+    <meta name="twitter:description" content="Free online JSON Viewer, Formatter, and Validator for developers and API debugging.">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Structured data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON Viewer & Formatter",
+      "alternateName": "Online JSON Viewer, Formatter & Validator",
+      "description": "Free online JSON Viewer, Formatter, Validator, and Beautifier. Load JSON from URL or paste, pretty-print or minify, validate, and inspect JSON in a collapsible tree view.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Works in all modern browsers.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+</head>
+<body class="min-h-screen" style="background-color: var(--bg-primary); color: var(--text-primary);">
+    <main>
+    <div class="container mx-auto px-3 py-2 max-w-7xl">
+        <!-- Header with Theme Toggle -->
+        <header class="mb-2 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold" style="color: var(--text-primary);">
+                    JSON Viewer & Formatter
+                </h1>
+            </div>
+            <div class="flex gap-2">
+                <button 
+                    onclick="showAbout()" 
+                    class="px-2 py-1 rounded text-xs font-medium hover:opacity-80 transition-opacity"
+                    style="background-color: var(--bg-tertiary); color: var(--text-primary);"
+                    title="About"
+                >
+                    About
+                </button>
+                <button 
+                    onclick="toggleTheme()" 
+                    id="themeToggle"
+                    class="p-1.5 rounded hover:opacity-80 transition-opacity"
+                    style="background-color: var(--bg-tertiary);"
+                    title="Toggle theme"
+                >
+                    <span id="themeIcon" class="text-lg">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="card mb-2 p-2 rounded" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);">
+            <div class="flex flex-wrap gap-1.5 items-center mb-2">
+                <!-- Load from URL -->
+                <div class="flex-1 min-w-[140px]">
+                    <input 
+                        type="url" 
+                        id="urlInput" 
+                        placeholder="Enter JSON URL..." 
+                        class="w-full px-2 py-1 rounded border text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
+                        style="background-color: var(--bg-tertiary); border-color: var(--border-color); color: var(--text-primary);"
+                    >
+                </div>
+                <button onclick="loadFromURL()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    📥 Load
+                </button>
+                <button onclick="pasteFromClipboard()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    📋 Paste
+                </button>
+                <button onclick="formatJSON()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    ✨ Format
+                </button>
+                <button onclick="minifyJSON()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    🗜️ Minify
+                </button>
+                <button onclick="copyToClipboard()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    📤 Copy
+                </button>
+                <button onclick="downloadJSON()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    💾 Download
+                </button>
+                <button onclick="clearJSON()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    🗑️ Clear
+                </button>
+                <button onclick="loadSampleJSON()" class="btn px-2 py-1 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);" title="Load sample JSON">
+                    📝 Sample
+                </button>
+            </div>
+
+            <!-- View Mode & Search -->
+            <div class="flex flex-wrap gap-1.5 items-center">
+                <span class="text-xs" style="color: var(--text-secondary);">View:</span>
+                <button onclick="setViewMode('formatted')" id="btnFormatted" class="btn px-2 py-0.5 rounded text-xs font-medium view-mode-btn active" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    Formatted
+                </button>
+                <button onclick="setViewMode('tree')" id="btnTree" class="btn px-2 py-0.5 rounded text-xs font-medium view-mode-btn" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    Tree
+                </button>
+                <button onclick="setViewMode('raw')" id="btnRaw" class="btn px-2 py-0.5 rounded text-xs font-medium view-mode-btn" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                    Raw
+                </button>
+                <div class="flex-1 min-w-[140px] ml-auto">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="🔍 Search..." 
+                        oninput="searchJSON()"
+                        class="w-full px-2 py-1 rounded border text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
+                        style="background-color: var(--bg-tertiary); border-color: var(--border-color); color: var(--text-primary);"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="card mb-2 p-1.5 rounded flex flex-wrap gap-3 text-xs" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);">
+            <div class="flex items-center gap-2">
+                <span style="color: var(--text-secondary);">Status:</span>
+                <span id="status" class="px-2 py-1 rounded-full bg-gray-500 text-white text-xs">Ready</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span style="color: var(--text-secondary);">Size:</span>
+                <span id="size" style="color: var(--text-primary);">0 bytes</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span style="color: var(--text-secondary);">Lines:</span>
+                <span id="lines" style="color: var(--text-primary);">0</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span style="color: var(--text-secondary);">Keys:</span>
+                <span id="keys" style="color: var(--text-primary);">0</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span style="color: var(--text-secondary);">Depth:</span>
+                <span id="depth" style="color: var(--text-primary);">0</span>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            <!-- Input Panel -->
+            <div class="card rounded overflow-hidden" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);" 
+                 ondrop="handleDrop(event)" 
+                 ondragover="handleDragOver(event)" 
+                 ondragleave="handleDragLeave(event)">
+                <div class="px-2 py-1 border-b flex items-center justify-between" style="background-color: var(--bg-tertiary); border-color: var(--border-color);">
+                    <h2 class="font-semibold text-xs" style="color: var(--text-primary);">JSON Input</h2>
+                    <button onclick="validateJSON()" class="btn px-1.5 py-0.5 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                        ✓ Validate
+                    </button>
+                </div>
+                <div id="dropZone" class="hidden absolute inset-0 bg-blue-100 dark:bg-blue-900 border-4 border-dashed border-blue-400 rounded z-10 flex items-center justify-center">
+                    <p class="text-blue-600 dark:text-blue-300 text-base font-semibold">Drop JSON file here</p>
+                </div>
+                <div class="relative">
+                    <div id="inputLineNumbers" class="absolute left-0 top-0 bottom-0 w-8 text-right pr-1 pt-2 line-numbers text-xs font-mono overflow-hidden" style="background-color: var(--bg-tertiary);"></div>
+                    <textarea 
+                        id="jsonInput" 
+                        placeholder="Paste JSON here, load from URL, or drag & drop a file..."
+                        oninput="handleInput()"
+                        class="w-full h-[calc(100vh-280px)] min-h-[500px] p-3 pl-9 border-0 font-mono text-sm resize-none focus:outline-none overflow-auto"
+                        style="background-color: var(--bg-primary); color: var(--text-primary);"
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Output Panel -->
+            <div class="card rounded overflow-hidden" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);">
+                <div class="px-2 py-1 border-b flex items-center justify-between" style="background-color: var(--bg-tertiary); border-color: var(--border-color);">
+                    <h2 class="font-semibold text-xs" style="color: var(--text-primary);">JSON Output</h2>
+                    <div class="flex gap-1 items-center">
+                        <button onclick="copyOutput()" class="btn px-1.5 py-0.5 rounded text-xs font-medium hover:opacity-80" style="background-color: var(--bg-tertiary); color: var(--text-primary);" title="Copy output">
+                            📋 Copy
+                        </button>
+                        <button onclick="expandAllTree()" class="btn px-1.5 py-0.5 rounded text-xs font-medium hover:opacity-80 hidden tree-control" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                            ⬇ Expand
+                        </button>
+                        <button onclick="collapseAllTree()" class="btn px-1.5 py-0.5 rounded text-xs font-medium hover:opacity-80 hidden tree-control" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
+                            ⬆ Collapse
+                        </button>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div id="outputLineNumbers" class="absolute left-0 top-0 bottom-0 w-8 text-right pr-1 pt-2 line-numbers text-xs font-mono overflow-hidden hidden" style="background-color: var(--bg-tertiary);"></div>
+                    <div 
+                        id="jsonOutput" 
+                        class="w-full pl-9 h-[calc(100vh-280px)] min-h-[500px] p-3 pl-3 font-mono text-sm overflow-auto"
+                        style="color: var(--text-primary); white-space: pre; overflow-x: auto;"
+                    >
+                        <div class="text-center mt-20" style="color: var(--text-secondary);">
+                            <p class="text-base mb-1">JSON output will appear here</p>
+                            <p class="text-xs">Format, validate, or load JSON to see results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Panel -->
+        <div id="errorPanel" class="mt-2 p-2 rounded border hidden" style="background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
+            <div class="flex items-start gap-2">
+                <span class="text-red-500 text-base">⚠️</span>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-red-600 dark:text-red-400 mb-1 text-sm">JSON Validation Error</h3>
+                    <pre id="errorMessage" class="text-red-600 dark:text-red-400 text-xs whitespace-pre-wrap font-mono"></pre>
+                </div>
+                <button onclick="closeError()" class="text-red-500 hover:text-red-600 text-lg">
+                    ×
+                </button>
+            </div>
+        </div>
+
+        <!-- Success Notification -->
+        <div id="successNotification" class="fixed top-2 right-2 text-white px-4 py-2 rounded shadow-xl hidden z-50 text-sm">
+            <span id="successMessage"></span>
+        </div>
+
+        <!-- About Modal -->
+        <div id="aboutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold" style="color: var(--text-primary);">About</h2>
+                    <button onclick="closeAbout()" class="text-2xl hover:opacity-80" style="color: var(--text-secondary);">&times;</button>
+                </div>
+                <div class="space-y-3 text-sm" style="color: var(--text-primary);">
+                    <div>
+                        <h3 class="font-semibold mb-1">Privacy Notice</h3>
+                        <p style="color: var(--text-secondary);">
+                            All JSON processing happens entirely in your browser. We don't store, transmit, or collect any of your data. Your JSON stays on your device.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-1">Features</h3>
+                        <ul class="list-disc list-inside space-y-1" style="color: var(--text-secondary);">
+                            <li>Load JSON from URL</li>
+                            <li>Format and minify JSON</li>
+                            <li>Tree view navigation</li>
+                            <li>JSON validation</li>
+                            <li>Search functionality</li>
+                            <li>Dark/Light theme</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-1">Keyboard Shortcuts</h3>
+                        <ul class="space-y-1" style="color: var(--text-secondary);">
+                            <li><kbd class="px-1.5 py-0.5 rounded text-xs" style="background-color: var(--bg-tertiary);">Ctrl/Cmd + F</kbd> - Focus search</li>
+                            <li><kbd class="px-1.5 py-0.5 rounded text-xs" style="background-color: var(--bg-tertiary);">Ctrl/Cmd + S</kbd> - Download JSON</li>
+                        </ul>
+                    </div>
+                    <div class="pt-2 border-t" style="border-color: var(--border-color);">
+                        <p class="text-xs" style="color: var(--text-secondary);">
+                            Made with ❤️ for developers
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- SEO content -->
+    <section class="mt-4 px-3 pb-4 max-w-7xl mx-auto">
+        <h2 class="text-sm font-semibold mb-1" style="color: var(--text-primary);">About this JSON Viewer, Formatter &amp; Validator</h2>
+        <p class="text-xs mb-2" style="color: var(--text-secondary);">
+            This tool is a fast, browser-based JSON viewer and formatter designed for developers, data engineers, and API consumers.
+            It helps you debug REST and GraphQL APIs, inspect configuration files, pretty-print or minify JSON, and safely validate
+            large payloads without sending any data to a server.
+        </p>
+        <p class="text-xs mb-2" style="color: var(--text-secondary);">
+            Use it as an online JSON beautifier, JSON validator, JSON tree explorer, or lightweight JSON editor when working with logs,
+            webhooks, OpenAPI/Swagger responses, or any other structured JSON data.
+            Everything runs locally in your browser, so your JSON stays private.
+        </p>
+        <p class="text-xs" style="color: var(--text-secondary);">
+            Common use cases include: debugging API responses, cleaning up JSON before sharing, validating integration payloads,
+            and quickly exploring deeply nested JSON objects with a collapsible tree view.
+        </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-2 py-1 text-center border-t" style="border-color: var(--border-color);">
+        <p class="text-xs" style="color: var(--text-secondary);">
+            Made with <span class="text-red-500">❤️</span> for developers
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

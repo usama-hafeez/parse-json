@@ -1,0 +1,153 @@
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Syntax highlighting */
+.json-key { color: var(--json-key); }
+.json-string { 
+    color: var(--json-string); 
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+.json-number { color: var(--json-number); }
+.json-boolean { color: var(--json-boolean); }
+.json-null { color: var(--json-null); }
+.json-punctuation { color: var(--json-punctuation); }
+
+/* Tree view styles */
+.tree-node {
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.tree-node:hover {
+    background-color: var(--tree-hover);
+}
+
+.tree-children {
+    margin-left: 20px;
+    display: none;
+}
+
+.tree-children.expanded {
+    display: block;
+}
+
+.tree-toggle {
+    display: inline-block;
+    width: 12px;
+    margin-right: 4px;
+    font-size: 10px;
+}
+
+/* Line numbers */
+.line-numbers {
+    counter-reset: line;
+}
+
+.line-numbers div::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 24px;
+    text-align: right;
+    margin-right: 8px;
+    color: var(--line-number);
+    user-select: none;
+    font-size: 11px;
+}
+
+/* Smooth transitions */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Human-made imperfections */
+.btn {
+    transform: translateY(0);
+    transition: transform 0.1s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Card subtle shadow */
+.card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Privacy notice */
+.privacy-notice {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    line-height: 1.5;
+}
+
+/* Theme variables */
+:root {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --scrollbar-track: #f1f5f9;
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
+    --json-key: #0369a1;
+    --json-string: #059669;
+    --json-number: #d97706;
+    --json-boolean: #7c3aed;
+    --json-null: #dc2626;
+    --json-punctuation: #475569;
+    --line-number: #94a3b8;
+    --tree-hover: rgba(148, 163, 184, 0.1);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --scrollbar-track: #1e293b;
+    --scrollbar-thumb: #475569;
+    --scrollbar-thumb-hover: #64748b;
+    --json-key: #7dd3fc;
+    --json-string: #86efac;
+    --json-number: #fbbf24;
+    --json-boolean: #a78bfa;
+    --json-null: #f87171;
+    --json-punctuation: #cbd5e1;
+    --line-number: #64748b;
+    --tree-hover: rgba(148, 163, 184, 0.15);
+}
+
+/* Active view mode button */
+.view-mode-btn.active {
+    border: 2px solid var(--json-key) !important;
+    font-weight: 600;
+}
