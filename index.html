@@ -113,7 +113,7 @@
                 </button>
             </div>
 
-            <!-- View Mode & Search -->
+            <!-- View Mode & Status -->
             <div class="flex flex-wrap gap-1.5 items-center">
                 <span class="text-xs" style="color: var(--text-secondary);">View:</span>
                 <button onclick="setViewMode('formatted')" id="btnFormatted" class="btn px-2 py-0.5 rounded text-xs font-medium view-mode-btn active" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
@@ -125,40 +125,28 @@
                 <button onclick="setViewMode('raw')" id="btnRaw" class="btn px-2 py-0.5 rounded text-xs font-medium view-mode-btn" style="background-color: var(--bg-tertiary); color: var(--text-primary);">
                     Raw
                 </button>
-                <div class="flex-1 min-w-[140px] ml-auto">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="🔍 Search..." 
-                        oninput="searchJSON()"
-                        class="w-full px-2 py-1 rounded border text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
-                        style="background-color: var(--bg-tertiary); border-color: var(--border-color); color: var(--text-primary);"
-                    >
+                <div class="flex-1 flex flex-wrap gap-3 items-center ml-auto text-xs">
+                    <div class="flex items-center gap-1.5">
+                        <span style="color: var(--text-secondary);">Status:</span>
+                        <span id="status" class="px-2 py-0.5 rounded-full bg-gray-500 text-white text-xs">Ready</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span style="color: var(--text-secondary);">Size:</span>
+                        <span id="size" style="color: var(--text-primary);">0 bytes</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span style="color: var(--text-secondary);">Lines:</span>
+                        <span id="lines" style="color: var(--text-primary);">0</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span style="color: var(--text-secondary);">Keys:</span>
+                        <span id="keys" style="color: var(--text-primary);">0</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span style="color: var(--text-secondary);">Depth:</span>
+                        <span id="depth" style="color: var(--text-primary);">0</span>
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Stats Bar -->
-        <div class="card mb-2 p-1.5 rounded flex flex-wrap gap-3 text-xs" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);">
-            <div class="flex items-center gap-2">
-                <span style="color: var(--text-secondary);">Status:</span>
-                <span id="status" class="px-2 py-1 rounded-full bg-gray-500 text-white text-xs">Ready</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span style="color: var(--text-secondary);">Size:</span>
-                <span id="size" style="color: var(--text-primary);">0 bytes</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span style="color: var(--text-secondary);">Lines:</span>
-                <span id="lines" style="color: var(--text-primary);">0</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span style="color: var(--text-secondary);">Keys:</span>
-                <span id="keys" style="color: var(--text-primary);">0</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span style="color: var(--text-secondary);">Depth:</span>
-                <span id="depth" style="color: var(--text-primary);">0</span>
             </div>
         </div>
 

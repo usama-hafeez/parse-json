@@ -556,28 +556,6 @@ function updateOutputLineNumbers(text) {
     }
 }
 
-// Search JSON
-function searchJSON() {
-    const searchTerm = document.getElementById('searchInput').value;
-    if (!searchTerm) {
-        displayJSON();
-        return;
-    }
-
-    const output = document.getElementById('jsonOutput');
-    let content = output.innerHTML;
-    
-    const regex = new RegExp(`(${escapeRegex(searchTerm)})`, 'gi');
-    content = content.replace(regex, '<mark class="bg-yellow-400 dark:bg-yellow-600 text-gray-900">$1</mark>');
-    
-    output.innerHTML = content;
-    
-    const firstMatch = output.querySelector('mark');
-    if (firstMatch) {
-        firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-}
-
 // Update stats
 function updateStats(text, isValid) {
     const size = new Blob([text]).size;
@@ -760,10 +738,6 @@ function handleDrop(e) {
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-        e.preventDefault();
-        document.getElementById('searchInput').focus();
-    }
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && e.target.id === 'urlInput') {
         loadFromURL();
     }
